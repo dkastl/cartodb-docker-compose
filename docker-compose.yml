@@ -1,0 +1,37 @@
+version: '3'
+services:
+  cartodb-sqlapi:
+    build: cartodb-sqlapi/.
+    ports:
+      - 8080:8080
+
+  cartodb-mapsapi:
+    build: cartodb-mapsapi/.
+    ports:
+      - 8181:8181
+
+  cartodb-builder:
+    build: cartodb-builder/.
+    ports:
+      - 3000:3000
+    hostname: cartodb-builder
+    domainname: cartodb-builder
+
+  postgres:
+    # image: splashblot/docker-postgis
+    build: postgres-cartodb/.
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  redis:
+    image: redis
+    command: ["redis-server", "--appendonly", "yes"]
+    hostname: redis
+
+
+
+volumes:
+  db-data:
+    driver: local
